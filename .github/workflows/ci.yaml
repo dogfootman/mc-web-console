@@ -1,0 +1,21 @@
+name: Remove ci_local.yaml on PR
+
+on:
+  pull_request:
+    branches: [ main ]  # 원본 리포지토리의 대상 브랜치
+
+jobs:
+  remove-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Remove ci_local.yaml
+      run: |
+        if [ -f .github/workflows/ci_local.yaml ]; then
+          git rm .github/workflows/ci_local.yaml
+          git commit -m "Remove ci_local.yaml before PR merge"
+          git push origin ${{ github.head_ref }}
+        fi
